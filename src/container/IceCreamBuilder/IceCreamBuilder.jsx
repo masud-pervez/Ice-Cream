@@ -1,48 +1,70 @@
-import React, { Component } from 'react'
-import Icecream from "../../components/IceCream/IceCream"
-import Builder from "../../components/Builder/Builder"
-
-
+import React, { Component } from "react";
+import Icecream from "../../components/IceCream/IceCream";
+import Builder from "../../components/Builder/Builder";
 
 export default class IceCreamBuilder extends Component {
-  state ={
-    items:{
-      vanilla: 45,
-      chocolate: 50,
-      lemon: 35,
-      orange: 40,
-      strawberry: 60,
-    },
-    scoops:[],
-    totalPrice:0,
+  state = {
+    items: {},
+    scoops: [],
+    totalPrice: 0,
   };
-  
-  appscoop = (scoop) =>{
-    const {scoops , items } = this.state;
+
+  componentDidMount() {
+    fetch("https://ice-cream-92923-default-rtdb.firebaseio.com/Items.json")
+      .then((response) => response.json())
+      .then((responseData) => {
+        this.setState({
+          items: responseData,
+        });
+      });
+  }
+
+  addscoop = (scoop) => {
+    const { scoops, items } = this.state;
     const workingScoop = [...scoops];
     workingScoop.push(scoop);
 
+    this.setState((prevState) => {
+      return {
+        scoops: workingScoop,
+        totalPrice: prevState.totalPrice + items[scoop],
+      };
+    });
+  };
 
-    this.setState({
-      scoops:  workingScoop,
-      totalPrice: items[scoop]
-    })
+  removescoop = (scoop) => {
+    const { scoops, items } = this.state;
+    const workingScoop = [...scoops];
+    const scoopIndex = workingScoop.findIndex((sc) => sc === scoop);
+    workingScoop.splice(scoopIndex, 1);
+
+    this.setState((prevState) => {
+      return {
+        scoops: workingScoop,
+        totalPrice: prevState.totalPrice - items[scoop],
+      };
+    });
   };
 
   render() {
-    const { items ,totalPrice} = this.state;
+    const { items, totalPrice, scoops } = this.state;
     return (
       <div className="container">
         <div className="row">
           <div className="col-md-6">
-          <Icecream />
+            <Icecream scoops={scoops} />
           </div>
           <div className="col-md-6 align-self-center">
-          <Builder items={items} price={totalPrice} />
+            <Builder
+              items={items}
+              price={totalPrice}
+              add={this.addscoop}
+              remove={this.removescoop}
+              scoops={scoops}
+            />
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
-   
