@@ -1,0 +1,40 @@
+/* Item */
+
+.item {
+  height: 40px;
+  text-align: left;
+  clear: both;
+  padding: 0;
+  line-height: 40px;
+}
+
+.quantity {
+  color: #5250507e;
+}
+
+.quantity::after {
+  content: ")";
+}
+
+.quantity::before {
+  content: "(";
+}
+
+.plus {
+  width: 30px;
+  font-size: 20px;
+  background: #28a745;
+  border: 0px;
+  color: white;
+  padding: 0px 5px;
+}
+
+.minus {
+  width: 30px;
+  font-size: 20px;
+  background: red;
+  border: 0px;
+  color: white;
+  padding: 0px 5px;
+  margin-left: 5px;
+}
